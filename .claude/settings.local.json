@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell([System.IO.Directory]::GetFiles\\(\"C:\\\\Users\\\\choon\\\\OneDrive\\\\Desktop\\\\badminton-tracker\\\\node_modules\\\\next\\\\dist\\\\docs\"\\))",
+      "Bash(npm run *)",
+      "Bash(start *)",
+      "Bash(taskkill /PID 30940 /F)",
+      "PowerShell(Stop-Process *)"
+    ]
+  }
+}
