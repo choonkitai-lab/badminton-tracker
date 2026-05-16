@@ -44,10 +44,12 @@ export function useSessions() {
     const durationMinutes = parseInt(formData.duration_minutes);
 
     // 1. Insert the session row
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
     const { data: session, error: sessionError } = await supabase
       .from('sessions')
       .insert({
-        user_id: '00000000-0000-0000-0000-000000000000',
+        user_id: user.id,
         racket_id: formData.racket_id,
         string_job_id: formData.string_job_id || null,
         session_date: formData.session_date,

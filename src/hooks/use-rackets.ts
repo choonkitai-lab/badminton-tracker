@@ -41,11 +41,12 @@ export function useRackets() {
   // Add a new racket
   async function addRacket(formData: RacketFormData): Promise<Racket> {
     const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
     const { data, error } = await supabase
       .from('rackets')
       .insert({
-        // Placeholder user_id — will be replaced when auth is added
-        user_id: '00000000-0000-0000-0000-000000000000',
+        user_id: user.id,
         name: formData.name,
         brand: formData.brand || null,
         model: formData.model || null,

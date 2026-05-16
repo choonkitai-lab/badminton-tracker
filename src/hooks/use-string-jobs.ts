@@ -48,10 +48,12 @@ export function useStringJobs(racketId?: string) {
   // Add a new string job
   async function addStringJob(formData: StringJobFormData): Promise<StringJob> {
     const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
     const { data, error } = await supabase
       .from('string_jobs')
       .insert({
-        user_id: '00000000-0000-0000-0000-000000000000',
+        user_id: user.id,
         racket_id: formData.racket_id,
         string_model: formData.string_model,
         string_brand: formData.string_brand || null,

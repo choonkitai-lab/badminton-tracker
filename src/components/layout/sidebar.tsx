@@ -7,7 +7,7 @@
 // ============================================================
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Dumbbell,
@@ -18,9 +18,12 @@ import {
   Sun,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import type { User } from '@supabase/supabase-js';
 
 // Each item in the sidebar navigation
 const navItems = [
@@ -33,10 +36,12 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
-  // On first load, check if user had previously saved a theme preference
+  // On first load, check theme preference and get current user
   useEffect(() => {
     const saved = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -44,7 +49,23 @@ export default function Sidebar() {
       setDarkMode(true);
       document.documentElement.classList.add('dark');
     }
+
+    // Get the logged-in user
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+
+    // Keep user state in sync if auth changes (e.g. sign out in another tab)
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => listener.subscription.unsubscribe();
   }, []);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+  }
 
   function toggleDarkMode() {
     const next = !darkMode;
@@ -124,13 +145,28 @@ export default function Sidebar() {
           <nav className="flex flex-col gap-1 flex-1">
             <NavLinks />
           </nav>
-          <button
-            onClick={toggleDarkMode}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
-          >
-            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
+          <div className="space-y-1">
+            <button
+              onClick={toggleDarkMode}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+            >
+              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {darkMode ? 'Light Mode' : 'Dark Mode'}
+            </button>
+            {user && (
+              <>
+                <div className="px-3 py-2 text-xs text-sidebar-foreground/60 truncate">
+                  {user.email}
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+                >
+                  <LogOut className="h-5 w-5" /> Sign Out
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -146,13 +182,28 @@ export default function Sidebar() {
         <nav className="flex flex-col gap-1 flex-1">
           <NavLinks />
         </nav>
-        <button
-          onClick={toggleDarkMode}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
-        >
-          {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          {darkMode ? 'Light Mode' : 'Dark Mode'}
-        </button>
+        <div className="space-y-1">
+          <button
+            onClick={toggleDarkMode}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+          >
+            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          {user && (
+            <>
+              <div className="px-3 py-1.5 text-xs text-sidebar-foreground/60 truncate">
+                {user.email}
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+              >
+                <LogOut className="h-5 w-5" /> Sign Out
+              </button>
+            </>
+          )}
+        </div>
       </aside>
     </>
   );
