@@ -30,13 +30,12 @@ export default function LoginPage() {
   const [error, setError]       = useState('');
   const [message, setMessage]   = useState('');
 
-  const supabase = createClient();
-
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError('');
     setMessage('');
+    const supabase = createClient();
 
     if (mode === 'signin') {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -66,6 +65,7 @@ export default function LoginPage() {
   async function handleGoogleLogin() {
     setLoading(true);
     setError('');
+    const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
