@@ -64,16 +64,19 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient();
-      const [{ data: r }, { data: sj }, { data: se }] = await Promise.all([
-        supabase.from('rackets').select('*'),
-        supabase.from('string_jobs').select('*, racket:rackets(name)').order('stringing_date', { ascending: false }).limit(8),
-        supabase.from('sessions').select('*').order('session_date', { ascending: false }).limit(5),
-      ]);
-      setRackets(r ?? []);
-      setStringJobs(sj ?? []);
-      setSessions(se ?? []);
-      setLoading(false);
+      try {
+        const supabase = createClient();
+        const [{ data: r }, { data: sj }, { data: se }] = await Promise.all([
+          supabase.from('rackets').select('*'),
+          supabase.from('string_jobs').select('*, racket:rackets(name)').order('stringing_date', { ascending: false }).limit(8),
+          supabase.from('sessions').select('*').order('session_date', { ascending: false }).limit(5),
+        ]);
+        setRackets(r ?? []);
+        setStringJobs(sj ?? []);
+        setSessions(se ?? []);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);

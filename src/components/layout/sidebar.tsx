@@ -51,6 +51,9 @@ export default function Sidebar() {
     }
 
     // Get the logged-in user
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      return;
+    }
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
 
