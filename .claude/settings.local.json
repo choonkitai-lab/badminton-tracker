@@ -25,7 +25,8 @@
       "Bash(git push *)",
       "Bash(git remote *)",
       "WebFetch(domain:badminton-tracker-git-master-choonkitai-7969s-projects.vercel.app)",
-      "Bash(npm show *)"
+      "Bash(npm show *)",
+      "Bash(git tag *)"
     ]
   }
 }
