@@ -214,7 +214,10 @@ export default function RacketsPage() {
       await addRacket(data);
       setShowAdd(false);
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : 'Error saving racket');
+      const msg = err instanceof Error ? err.message : 'Error saving racket';
+      console.error('[handleAdd] error:', msg);
+      setFormError(msg);
+      alert('Save failed: ' + msg);
     } finally {
       setSaving(false);
     }

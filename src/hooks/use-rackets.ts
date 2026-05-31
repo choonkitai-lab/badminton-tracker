@@ -41,12 +41,13 @@ export function useRackets() {
   // Add a new racket
   async function addRacket(formData: RacketFormData): Promise<Racket> {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    console.log('[addRacket] auth:', authData?.user?.id, 'authError:', authError);
+    if (!authData.user) throw new Error('Not authenticated — please sign in again');
     const { data, error } = await supabase
       .from('rackets')
       .insert({
-        user_id: user.id,
+        user_id: authData.user.id,
         name: formData.name,
         brand: formData.brand || null,
         model: formData.model || null,
@@ -57,8 +58,8 @@ export function useRackets() {
       .select()
       .single();
 
+    console.log('[addRacket] insert result — data:', data, 'error:', error);
     if (error) throw new Error(error.message);
-    // Prepend to local state so it appears at the top without refetching
     setRackets(prev => [data, ...prev]);
     return data;
   }
