@@ -214,10 +214,7 @@ export default function RacketsPage() {
       await addRacket(data);
       setShowAdd(false);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Error saving racket';
-      console.error('[handleAdd] error:', msg);
-      setFormError(msg);
-      alert('Save failed: ' + msg);
+      setFormError(err instanceof Error ? err.message : 'Error saving racket');
     } finally {
       setSaving(false);
     }
@@ -257,7 +254,7 @@ export default function RacketsPage() {
           <p className="text-muted-foreground mt-1">Manage your badminton rackets</p>
         </div>
         <button
-          onClick={() => { alert('React is working — opening modal'); setFormError(''); setShowAdd(true); }}
+          onClick={() => { setFormError(''); setShowAdd(true); }}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
         >
           <Plus className="h-4 w-4" /> Add Racket

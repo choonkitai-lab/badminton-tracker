@@ -5,7 +5,27 @@
       "Bash(npm run *)",
       "Bash(start *)",
       "Bash(taskkill /PID 30940 /F)",
-      "PowerShell(Stop-Process *)"
+      "PowerShell(Stop-Process *)",
+      "Bash(git commit *)",
+      "Bash(git config *)",
+      "Bash(dir \"C:\\\\Users\\\\choon\\\\OneDrive\\\\Desktop\\\\badminton-tracker\\\\src\")",
+      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)",
+      "PowerShell(npm run *)",
+      "PowerShell(taskkill *)",
+      "PowerShell(Get-Process *)",
+      "Bash(npm ls *)",
+      "Bash(Start-Process -NoNewWindow -PassThru -FilePath \"npx\" -ArgumentList \"next\",\"start\")",
+      "Bash(Start-Sleep -Seconds 5)",
+      "Bash(Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing)",
+      "Bash(Select-Object -First 20)",
+      "Bash(npx next *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
+      "Bash(node -e ' *)",
+      "Bash(git add *)",
+      "Bash(git push *)",
+      "Bash(git remote *)",
+      "WebFetch(domain:badminton-tracker-git-master-choonkitai-7969s-projects.vercel.app)",
+      "Bash(npm show *)"
     ]
   }
 }
