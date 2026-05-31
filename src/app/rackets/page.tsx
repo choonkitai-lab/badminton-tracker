@@ -257,7 +257,7 @@ export default function RacketsPage() {
           <p className="text-muted-foreground mt-1">Manage your badminton rackets</p>
         </div>
         <button
-          onClick={() => { setFormError(''); setShowAdd(true); }}
+          onClick={() => { alert('React is working — opening modal'); setFormError(''); setShowAdd(true); }}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
         >
           <Plus className="h-4 w-4" /> Add Racket
